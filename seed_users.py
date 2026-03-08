@@ -7,25 +7,33 @@ app = create_app()
 with app.app_context():
     db.create_all()
 
-    # 🔐 passwords
+    # 🔐 hashed passwords
     admin_pass = bcrypt.generate_password_hash("admin123").decode("utf-8")
     user_pass = bcrypt.generate_password_hash("user123").decode("utf-8")
 
-    # 👤 admin
-    admin = User(
-        email="admin@test.com",
-        password_hash=admin_pass,
-        role="admin"
-    )
+    # check if admin already exists
+    if not User.query.filter_by(email="admin@test.com").first():
 
-    # 👤 user
-    user = User(
-        email="user@test.com",
-        password_hash=user_pass,
-        role="user"
-    )
+        # 👤 admin
+        admin = User(
+            username="admin",
+            email="admin@test.com",
+            password=admin_pass,
+            role="admin"
+        )
 
-    db.session.add_all([admin, user])
-    db.session.commit()
+        # 👤 normal user
+        user = User(
+            username="user",
+            email="user@test.com",
+            password=user_pass,
+            role="user"
+        )
 
-    print("✅ Admin & User created successfully")
+        db.session.add_all([admin, user])
+        db.session.commit()
+
+        print("✅ Admin & User created successfully")
+
+    else:
+        print("⚠️ Users already exist")
