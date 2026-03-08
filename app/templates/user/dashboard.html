@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">User Dashboard</h2>
+
+<!-- TOP STATS -->
+<div class="grid grid-cols-6 gap-4 mb-6">
+  {% for label, value in stats.items() %}
+  <div class="bg-[#151515] p-4 rounded-lg shadow">
+    <p class="text-xs text-gray-400 uppercase">
+      {{ label.replace("_"," ") }}
+    </p>
+    <p class="text-2xl font-bold text-[#C1121F]">
+      {{ value }}
+    </p>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- ANALYTICS SECTION -->
+<div class="grid grid-cols-3 gap-6 mb-6">
+  <div class="bg-[#151515] p-4 rounded-lg">
+    <h3 class="text-sm mb-2">Complaint Trends</h3>
+    <canvas id="trendChart"></canvas>
+  </div>
+  <div class="bg-[#151515] p-4 rounded-lg">
+    <h3 class="text-sm mb-2">Category Distribution</h3>
+    <canvas id="categoryChart"></canvas>
+  </div>
+  <div class="bg-[#151515] p-4 rounded-lg">
+    <h3 class="text-sm mb-2">Priority Levels</h3>
+    <canvas id="priorityChart"></canvas>
+  </div>
+</div>
+
+<!-- RECENT COMPLAINTS -->
+<div class="bg-[#151515] p-6 rounded-lg">
+  <h3 class="mb-4 font-semibold">Recent Complaints</h3>
+  <table class="w-full text-sm">
+    <thead class="text-gray-400">
+      <tr>
+        <th class="text-left">Title</th>
+        <th>Priority</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in recent_complaints %}
+      <tr class="border-t border-gray-800">
+        <td class="py-2">{{ c.title }}</td>
+        <td class="text-[#C1121F]">{{ c.priority }}</td>
+        <td>{{ c.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script id="dashboard-data" type="application/json">
+{{ {
+    "months": months if months is defined else [],
+    "month_counts": month_counts if month_counts is defined else [],
+    "categories": categories if categories is defined else [],
+    "category_counts": category_counts if category_counts is defined else [],
+    "high": high if high is defined else 0,
+    "medium": medium if medium is defined else 0,
+    "low": low if low is defined else 0
+} | tojson }}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+const dashboardData = JSON.parse(
+  document.getElementById("dashboard-data").textContent
+);
+
+const baseOptions = {
+  plugins: { legend: { labels: { color: "white" }}},
+  scales: {
+    x: { ticks: { color: "white" }},
+    y: { ticks: { color: "white" }}
+  }
+};
+
+new Chart(document.getElementById("trendChart"), {
+  type: "line",
+  data: {
+    labels: dashboardData.months,
+    datasets: [{
+      data: dashboardData.month_counts,
+      borderColor:"#C1121F"
+    }]
+  },
+  options: baseOptions
+});
+
+new Chart(document.getElementById("categoryChart"), {
+  type: "doughnut",
+  data: {
+    labels: dashboardData.categories,
+    datasets:[{
+      data: dashboardData.category_counts,
+      backgroundColor:["#C1121F","#444","#666","#888","#aaa"]
+    }]
+  }
+});
+
+new Chart(document.getElementById("priorityChart"), {
+  type:"bar",
+  data:{
+    labels:["High","Medium","Low"],
+    datasets:[{
+      data:[
+        dashboardData.high,
+        dashboardData.medium,
+        dashboardData.low
+      ],
+      backgroundColor:"#C1121F"
+    }]
+  },
+  options: baseOptions
+});
+
+</script>
+
+{% endblock %}

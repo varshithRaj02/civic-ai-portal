@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-6">All Complaints</h2>
+
+  <table class="w-full text-sm">
+    <tr class="text-left text-gray-400">
+  <th>Title</th>
+  <th>User</th>
+  <th>Status</th>
+  <th>Image</th>
+  <th>View</th>
+</tr>
+
+    {% for c in complaints %}
+    <tr class="border-t border-gray-700">
+      <td>{{ c.title }}</td>
+      <td>User #{{ c.user_id }}</td>
+
+      <!-- ✅ EDITABLE STATUS -->
+      <td>
+  <form method="POST"
+        action="{{ url_for('admin.update_status', complaint_id=c.id) }}">
+    <select name="status"
+            onchange="this.form.submit()"
+            class="bg-black text-white border border-gray-700 rounded p-1">
+
+      <option value="Pending" {% if c.status=='Pending' %}selected{% endif %}>
+        Pending
+      </option>
+
+      <option value="In Progress" {% if c.status=='In Progress' %}selected{% endif %}>
+        In Progress
+      </option>
+
+      <option value="Resolved" {% if c.status=='Resolved' %}selected{% endif %}>
+        Resolved
+      </option>
+
+    </select>
+  </form>
+</td>
+
+      <!-- IMAGE -->
+      <td>
+        {% if c.media %}
+        <img src="{{ url_for('static', filename=c.media) }}"
+             class="h-16 rounded">
+        {% else %}
+        —
+        {% endif %}
+      </td>
+      <td>
+  <a href="{{ url_for('admin.complaint_detail', complaint_id=c.id) }}"
+     class="text-[#C1121F] hover:underline font-semibold">
+    View
+  </a>
+</td>
+    </tr>
+    
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="flex justify-center mt-20">
+
+<form method="POST" class="bg-[#151515] p-8 rounded-lg w-96 space-y-4">
+
+<h2 class="text-xl font-semibold text-center">Register</h2>
+
+<input name="username" placeholder="Username"
+class="w-full p-3 bg-black border border-gray-700 rounded">
+
+<input name="email" placeholder="Email"
+class="w-full p-3 bg-black border border-gray-700 rounded">
+
+<input type="password" name="password" placeholder="Password"
+class="w-full p-3 bg-black border border-gray-700 rounded">
+
+<button class="w-full bg-[#C1121F] py-3 rounded">
+Create Account
+</button>
+
+</form>
+
+</div>
+
+{% endblock %}

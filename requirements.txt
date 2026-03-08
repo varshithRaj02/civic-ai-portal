@@ -1,0 +1,12 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Bcrypt
+scikit-learn
+pandas
+numpy
+Pillow
+folium
+gunicorn
+itsdangerous

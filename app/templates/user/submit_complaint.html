@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+<div class="container mx-auto px-6 py-6">
+
+<main class="grid grid-cols-3 gap-6">
+<!-- LEFT SIDE : FORM -->
+<div class="col-span-2">
+
+<form method="POST" enctype="multipart/form-data"
+class="bg-[#151515] p-6 rounded-lg space-y-4">
+
+<h2 class="text-xl font-semibold">Submit New Complaint</h2>
+    <!-- TITLE -->
+    <input name="title" required
+    class="w-full p-3 bg-black border border-gray-700 rounded"
+    placeholder="Complaint Title">
+
+    <!-- CATEGORY + LOCATION -->
+    <div class="grid grid-cols-2 gap-4">
+
+      <select name="category"
+      class="p-3 bg-black border border-gray-700 rounded">
+
+        <option>Roads</option>
+        <option>Water</option>
+        <option>Electricity</option>
+        <option>Sanitation</option>
+        <option>Public Safety</option>
+
+      </select>
+
+      <input name="location"
+      class="p-3 bg-black border border-gray-700 rounded"
+      placeholder="Location">
+
+    </div>
+
+    <!-- HIDDEN GEOLOCATION -->
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <!-- DESCRIPTION -->
+    <textarea name="description" rows="5"
+    class="w-full p-3 bg-black border border-gray-700 rounded"
+    placeholder="Describe the issue in detail"></textarea>
+
+    <!-- AI PREDICTION PANEL -->
+    <div id="ai-priority-box"
+    class="bg-black border border-gray-700 p-3 rounded text-sm hidden">
+
+      <p class="text-gray-400">AI Prediction</p>
+
+      <p>
+        Priority:
+        <span id="ai-priority" class="font-semibold"></span>
+      </p>
+
+      <p>
+        Severity Score:
+        <span id="ai-score"></span>
+      </p>
+
+      <p>
+        Risk Type:
+        <span id="ai-risk"></span>
+      </p>
+
+      <p>
+Image Detection:
+<span id="ai-image"></span>
+</p>
+
+    </div>
+
+    <!-- FILE UPLOAD -->
+    <input type="file" name="media" id="media"
+    accept="image/*,video/*"
+    class="w-full p-3 bg-black border border-gray-700 rounded">
+
+    <!-- IMAGE PREVIEW -->
+    <img id="preview"
+    class="hidden mt-3 rounded max-h-48">
+    
+
+    <!-- SUBMIT -->
+    <div class="flex justify-center pt-4">
+
+      <button
+      class="bg-[#C1121F] px-10 py-3 rounded font-semibold hover:bg-red-700 transition">
+
+      Submit Complaint
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+<div class="bg-[#151515] p-6 rounded-lg space-y-4">
+
+<h3 class="font-semibold">How AI evaluates priority</h3>
+
+<ul class="text-sm text-gray-400 space-y-2">
+<li>• AI language analysis</li>
+<li>• Public safety impact</li>
+<li>• Location sensitivity</li>
+<li>• Similar past complaints</li>
+</ul>
+
+<div class="bg-black p-4 rounded text-sm">
+<p class="text-[#C1121F] font-semibold">Tip</p>
+Provide a clear description for faster resolution.
+</div>
+
+</div>
+
+  </main>
+
+</div>
+
+<!-- IMAGE PREVIEW -->
+
+<script>
+
+document.getElementById("media").onchange = e => {
+
+const [file] = e.target.files;
+
+if(file){
+
+const img = document.getElementById("preview");
+
+img.src = URL.createObjectURL(file);
+
+img.classList.remove("hidden");
+
+}
+
+};
+
+</script>
+
+<!-- AI PREDICTION -->
+
+<script>
+
+const desc = document.querySelector('textarea[name="description"]');
+
+const box = document.getElementById("ai-priority-box");
+const priorityLabel = document.getElementById("ai-priority");
+const scoreLabel = document.getElementById("ai-score");
+const riskLabel = document.getElementById("ai-risk");
+
+let timeout = null;
+
+desc.addEventListener("input", () => {
+
+clearTimeout(timeout);
+
+timeout = setTimeout(() => {
+
+if(desc.value.length < 5){
+
+box.classList.add("hidden");
+return;
+
+}
+
+fetch("/user/ai/predict-priority",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+description:desc.value
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+box.classList.remove("hidden");
+
+priorityLabel.textContent = data.priority;
+scoreLabel.textContent = data.severity_score;
+riskLabel.textContent = data.risk_type;
+document.getElementById("ai-image").textContent = data.image_risk;
+
+if(data.priority==="High"){
+priorityLabel.className="text-red-500 font-semibold";
+}
+
+else if(data.priority==="Medium"){
+priorityLabel.className="text-yellow-400 font-semibold";
+}
+
+else{
+priorityLabel.className="text-green-500 font-semibold";
+}
+
+});
+
+},500);
+
+});
+
+</script>
+
+<!-- GEOLOCATION -->
+
+<script>
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+document.getElementById("latitude").value=position.coords.latitude;
+document.getElementById("longitude").value=position.coords.longitude;
+
+});
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2 class="text-2xl font-bold mb-6">Complaint Details</h2>
+
+<div class="grid grid-cols-3 gap-6">
+
+  <!-- LEFT SIDE - MAIN INFO -->
+  <div class="col-span-2 bg-[#151515] p-6 rounded-lg space-y-5">
+
+    <div>
+      <p class="text-gray-400 text-sm">Title</p>
+      <p class="text-xl font-semibold">{{ complaint.title }}</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+
+      <div>
+        <p class="text-gray-400 text-sm">Category</p>
+        <p>{{ complaint.category }}</p>
+      </div>
+
+      <div>
+        <p class="text-gray-400 text-sm">Location</p>
+        <p>{{ complaint.location }}</p>
+      </div>
+
+      <div>
+        <p class="text-gray-400 text-sm">Priority (AI)</p>
+        <p class="
+          {% if complaint.priority == 'High' %}
+            text-red-500
+          {% elif complaint.priority == 'Medium' %}
+            text-yellow-400
+          {% else %}
+            text-green-400
+          {% endif %}
+          font-semibold">
+          {{ complaint.priority }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-400 text-sm">Current Status</p>
+        <p>{{ complaint.status }}</p>
+      </div>
+
+    </div>
+
+    <div>
+      <p class="text-gray-400 text-sm">Description</p>
+      <p class="mt-2 text-gray-300">
+        {{ complaint.description }}
+      </p>
+    </div>
+
+    {% if complaint.media %}
+    <div>
+      <p class="text-gray-400 text-sm mb-2">Uploaded Media</p>
+      <img src="{{ url_for('static', filename=complaint.media) }}"
+           class="rounded max-h-80">
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- RIGHT SIDE - STATUS CONTROL -->
+  <div class="bg-[#151515] p-6 rounded-lg space-y-6">
+
+    <h3 class="text-lg font-semibold text-[#C1121F]">
+      Update Status
+    </h3>
+
+    <form method="POST"
+          action="{{ url_for('admin.update_status', complaint_id=complaint.id) }}">
+
+      <select name="status"
+        class="w-full p-3 bg-black border border-gray-700 rounded">
+
+        <option {% if complaint.status == "Pending" %}selected{% endif %}>
+          Pending
+        </option>
+
+        <option {% if complaint.status == "In Progress" %}selected{% endif %}>
+          In Progress
+        </option>
+
+        <option {% if complaint.status == "Resolved" %}selected{% endif %}>
+          Resolved
+        </option>
+
+      </select>
+
+      <button
+        class="mt-4 w-full bg-[#C1121F] py-3 rounded font-semibold hover:bg-red-700 transition">
+        Save Status
+      </button>
+
+    </form>
+
+    <a href="{{ url_for('admin.all_complaints') }}"
+       class="block text-center text-gray-400 hover:text-white pt-4">
+       ← Back to All Complaints
+    </a>
+
+  </div>
+
+</div>
+
+{% endblock %}

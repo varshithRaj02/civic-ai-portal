@@ -1,0 +1,221 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="flex">
+
+  <!-- SIDEBAR -->
+  
+
+  <!-- MAIN -->
+  <main class="flex-1 p-6 space-y-6">
+
+    <!-- STATS -->
+    <div class="grid grid-cols-5 gap-4">
+      {% for label, value in stats.items() %}
+      <div class="bg-[#151515] p-4 rounded-lg shadow">
+        <p class="text-xs text-gray-400 uppercase">{{ label.replace("_"," ") }}</p>
+        <p class="text-2xl font-bold text-[#C1121F]">{{ value }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+
+  <div class="bg-[#151515] p-4 rounded-lg">
+    <p class="text-xs text-gray-400">Most Problematic Area</p>
+    <p class="text-xl font-bold text-[#C1121F]">
+      {{ top_location }}
+    </p>
+  </div>
+
+  <div class="bg-[#151515] p-4 rounded-lg">
+    <p class="text-xs text-gray-400">Most Common Complaint</p>
+    <p class="text-xl font-bold text-[#C1121F]">
+      {{ top_category }}
+    </p>
+  </div>
+<div class="bg-[#151515] p-4 rounded-lg">
+
+<p class="text-xs text-gray-400">
+🔥 High Risk Zone
+</p>
+
+<p class="text-xl font-bold text-red-500">
+{{ high_risk_zone }}
+</p>
+
+<p class="text-sm text-gray-400">
+{{ high_risk_count }} complaints reported
+</p>
+
+</div>
+</div>
+
+    <!-- HIGH PRIORITY -->
+    <div class="bg-[#151515] p-6 rounded-lg">
+      <h3 class="text-lg font-semibold text-[#C1121F] mb-4">
+        High Priority Complaints
+      </h3>
+
+      <table class="w-full text-sm table-auto">
+        <thead class="text-gray-400">
+          <tr>
+            <th class="text-left">Title</th>
+            <th>Location</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in high_priority_complaints %}
+          <tr class="border-t border-gray-800">
+            <td class="py-2 text-left">{{ c.title }}</td>
+            <td class="text-left">{{ c.location }}</td>
+            <td class="
+  {% if c.status == 'Resolved' %}text-green-500
+  {% elif c.status == 'Pending' %}text-yellow-400
+  {% else %}text-red-500
+  {% endif %}
+">
+  {{ c.status }}
+</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- ANALYTICS PLACEHOLDER -->
+    <div class="grid grid-cols-2 gap-6">
+      <div class="bg-[#151515] p-4 rounded-lg">
+        <h4 class="text-sm mb-2">Monthly Complaint Trends</h4>
+        <canvas id="adminTrend"></canvas>
+      </div>
+      <div class="bg-[#151515] p-4 rounded-lg">
+        <h4 class="text-sm mb-2">Priority Distribution</h4>
+        <canvas id="adminPriority"></canvas>
+      </div>
+      <div class="bg-[#151515] p-4 rounded-lg">
+  <h4 class="text-sm mb-2">Complaint Categories</h4>
+  <canvas id="categoryChart"></canvas>
+</div>
+    </div>
+  </main>
+</div>
+<div class="bg-red-900 p-4 rounded-lg mb-6">
+
+<h3 class="text-lg font-bold text-white mb-3">
+🚨 Emergency Alerts
+</h3>
+
+{% if emergency_complaints %}
+
+<ul class="space-y-2">
+
+{% for c in emergency_complaints %}
+
+<li class="bg-black p-3 rounded">
+
+<strong>{{ c.title }}</strong><br>
+
+Location: {{ c.location }} |
+Status: {{ c.status }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+{% else %}
+
+<p class="text-gray-300">No emergency complaints.</p>
+
+{% endif %}
+
+</div>
+<script id="category-data" type="application/json">
+{{ category_counts | tojson }}
+</script>
+<script id="priority-data" type="application/json">
+{{ priority_data | tojson }}
+</script>
+<script id="trend-data" type="application/json">
+{{ month_counts | tojson }}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+var trendData = JSON.parse(
+  document.getElementById("trend-data").textContent
+);
+
+var priorityData = JSON.parse(
+  document.getElementById("priority-data").textContent
+);
+
+new Chart(document.getElementById("adminTrend"), {
+
+type: "line",
+
+data: {
+
+labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+
+datasets:[{
+
+label:"Complaints",
+
+data: trendData,
+
+borderColor:"#C1121F",
+
+tension:0.3
+
+}]
+
+}
+
+});
+
+new Chart(document.getElementById("adminPriority"), {
+  type: "doughnut",
+  data: {
+    labels:["High","Medium","Low"],
+    datasets:[{
+      data: priorityData,
+      backgroundColor:["#C1121F","#444","#666"]
+    }]
+  }
+});
+
+var categoryData = JSON.parse(
+document.getElementById("category-data").textContent
+);
+
+new Chart(document.getElementById("categoryChart"), {
+
+type: "bar",
+
+data: {
+
+labels:["Roads","Water","Electricity","Sanitation","Public Safety"],
+
+datasets:[{
+
+label:"Complaints",
+
+data: categoryData,
+
+backgroundColor:"#C1121F"
+
+}]
+
+}
+
+});
+
+</script>
+<div class="bg-[#151515] p-6 rounded-lg mt-6">
+  <h3 class="mb-4 font-semibold">Complaint Locations</h3>
+  {{ map_html | safe }}
+</div>
+{% endblock %}
