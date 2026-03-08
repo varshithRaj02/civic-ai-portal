@@ -5,7 +5,21 @@ This project is an AI-based civic complaint management system designed to assist
 The system allows citizens to submit complaints and automatically analyzes them using AI to determine urgency, detect risk levels, and assist administrators in efficient urban governance.
 
 ---
+## Live Demo
 
+You can access the deployed system here:
+
+https://civic-ai-portal.onrender.com
+
+Demo Credentials:
+
+Admin  
+username: admin@test.com 
+password: admin123
+
+User  
+username: user@test.com
+password: user123
 ## Key Features
 
 - User authentication (Login / Registration)
@@ -150,7 +164,19 @@ This project is part of research work on:
 
 The system explores the use of machine learning and natural language processing for intelligent urban governance systems.
 ---
+## System Screenshots
 
+### Login Interface
+![Login](screenshots/login.png)
+
+### User Dashboard
+![Dashboard](screenshots/user_dashboard.png)
+
+### AI Complaint Analysis
+![AI Analysis](screenshots/ai_prediction.png)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin_dashboard.png)
 ## Project Structure
 
 ```plaintext
