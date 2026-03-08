@@ -203,6 +203,6 @@ def predict_priority_api():
 
     return jsonify({
         "priority": priority,
-        "severity_score": severity_score,
+        "confidence": severity_score,
         "risk_type": risk_type
     })

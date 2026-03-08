@@ -46,6 +46,17 @@ class="bg-[#151515] p-6 rounded-lg space-y-4">
     class="w-full p-3 bg-black border border-gray-700 rounded"
     placeholder="Describe the issue in detail"></textarea>
 
+
+
+    <div id="aiResult" style="display:none; margin-top:15px; padding:12px; border-radius:8px; background:#111; color:white;">
+  <h4>AI Analysis</h4>
+
+  <p><strong>Priority:</strong> <span id="priorityText"></span></p>
+
+  <p><strong>Confidence:</strong> <span id="confidenceText"></span></p>
+
+  <p><strong>Risk Type:</strong> <span id="riskTypeText"></span></p>
+</div>
     <!-- AI PREDICTION PANEL -->
     <div id="ai-priority-box"
     class="bg-black border border-gray-700 p-3 rounded text-sm hidden">
@@ -233,5 +244,39 @@ document.getElementById("longitude").value=position.coords.longitude;
 }
 
 </script>
+<script>
 
+const descriptionInput = document.querySelector("textarea[name='description']");
+
+descriptionInput.addEventListener("blur", async () => {
+
+    const text = descriptionInput.value;
+
+    if (!text) return;
+
+    const response = await fetch("/user/ai/predict-priority", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            description: text
+        })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("aiResult").style.display = "block";
+
+    document.getElementById("priorityText").innerText = data.priority;
+
+    document.getElementById("confidenceText").innerText =
+        (data.confidence * 100).toFixed(1) + "%";
+
+    document.getElementById("riskTypeText").innerText =
+        data.risk_type;
+
+});
+
+</script>
 {% endblock %}
