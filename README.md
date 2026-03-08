@@ -1,132 +1,154 @@
-# AI-Powered Smart City Civic Intelligence Platform
+# AI Powered Civic Grievance Prioritization System for Smart Urban Governance
 
-An AI-driven smart city platform designed to automatically analyze and prioritize civic complaints using machine learning and real-time analytics.
+This project is an AI-based civic complaint management system designed to assist municipalities in prioritizing public grievances using machine learning and natural language processing.
 
-This system helps municipal authorities identify urgent issues, monitor infrastructure problems, and improve response time for public services.
-
----
-
-# Live Demo
-
-Deployment in progress.
-
-The application will be accessible through a public link once deployed.
+The system allows citizens to submit complaints and automatically analyzes them using AI to determine urgency, detect risk levels, and assist administrators in efficient urban governance.
 
 ---
 
-# Project Overview
+## Key Features
 
-Urban areas receive thousands of complaints related to roads, water supply, sanitation, electricity, and public safety.  
-
-Manual prioritization of these complaints often delays responses to critical issues.
-
-This project introduces an **AI-powered civic complaint prioritization system** that automatically analyzes complaint descriptions and assigns urgency levels.
-
-The system provides a **command center dashboard** for administrators to monitor city issues in real time.
-
----
-
-# Key Features
-
-## Citizen Interface
-
-- Submit civic complaints
-- Upload complaint images
+- User authentication (Login / Registration)
+- Complaint submission with location and media upload
 - AI-based complaint priority prediction
-- Severity score estimation
-- Risk type classification
-- Complaint history tracking
+- Risk classification of civic issues
+- Similar complaint detection using NLP
+- Image-based risk detection
+- Admin dashboard for complaint management
+- Complaint analytics and statistics
+- Smart-city complaint monitoring system
+- Cloud deployment for live demonstration
 
 ---
 
-## Admin Command Center
+## AI Components
 
-- Real-time complaint monitoring
-- Priority-based complaint filtering
-- Complaint category analytics
-- Smart city dashboard
-- Geographic complaint mapping
-- Risk zone identification
-- Complaint status management
+The system integrates several AI modules:
 
----
+### 1. Complaint Priority Prediction
+A machine learning model analyzes the complaint description and predicts its urgency level:
+- High Priority
+- Medium Priority
+- Low Priority
 
-# AI Capabilities
+### 2. Risk Classification
+The system classifies complaints into risk categories such as:
+- Critical Safety
+- Moderate Risk
+- General Issue
 
-The platform integrates several AI-based analysis features.
+### 3. Similar Complaint Detection
+Natural Language Processing (TF-IDF + Cosine Similarity) is used to detect previously submitted complaints with similar descriptions.
 
-### Natural Language Processing
+### 4. Image Risk Detection
+Uploaded images are analyzed to identify potential hazards related to the complaint.
 
-- Complaint text processing
-- TF-IDF feature extraction
-- Machine learning priority classification
-
-### Severity Scoring
-
-Each complaint receives a severity score indicating urgency.
-
-### Complaint Similarity Detection
-
-The system detects complaints similar to previously reported issues.
-
-### Image Hazard Detection
-
-Uploaded images are analyzed for potential risk indicators.
+### 5. AI Confidence Score
+The system displays an AI confidence score representing how certain the model is about the predicted priority.
 
 ---
 
-# Technology Stack
+## Technologies Used
 
-## Backend
-
+Backend:
 - Python
 - Flask
-- Flask-Login
 - Flask-SQLAlchemy
-- Flask-Migrate
+- Flask-Login
 - Flask-Bcrypt
 
----
-
-## Machine Learning
-
+Machine Learning:
 - Scikit-learn
 - TF-IDF Vectorization
-- Machine Learning Classification Models
+- Random Forest Classifier
+- Cosine Similarity
+
+Frontend:
+- HTML
+- CSS
+- JavaScript
+- Jinja2 Templates
+
+Database:
+- SQLite
+
+Deployment:
+- Render Cloud Platform
+- Gunicorn Web Server
 
 ---
 
-## Data Visualization
+## System Architecture
 
-- Chart.js dashboards
-- Folium interactive maps
+User → Submit Complaint  
+↓  
+AI Model Processes Complaint Description  
+↓  
+Priority Prediction + Risk Classification  
+↓  
+Complaint Stored in Database  
+↓  
+Admin Dashboard for Monitoring & Resolution  
 
 ---
 
-## Database
+## Demo Credentials
 
-- SQLite (development database)
+### Admin
+
+Username: `admin@test.com`  
+Password: `admin123`
+
+### User
+
+Username: `user@test.com`  
+Password: `user123`
 
 ---
 
-## Deployment
+## Demo Notice
 
-- Render cloud hosting
+This project is deployed on Render's free hosting tier for demonstration purposes.
+
+Due to the use of ephemeral storage, the database may reset after periods of inactivity or service restarts.
+
+If the system appears empty, please submit a few sample complaints to explore the platform features.
+
+Recommended: Submit at least **3 complaints** to view the analytics and AI prioritization working effectively.
 
 ---
 
-# System Architecture
+## Example Complaints for Testing
 
-Citizen Complaint Submission  
-↓  
-Flask Web Application  
-↓  
-AI Priority Prediction Model  
-↓  
-Database Storage  
-↓  
-Admin Command Center Dashboard  
+1. Large pothole on highway causing accidents  
+2. Garbage not collected in residential area for several days  
+3. Broken streetlight near school causing safety issues  
+4. Water leakage from damaged pipeline  
+5. Open sewage drain causing health hazards
 
+---
+
+## Project Goal
+
+The goal of this project is to demonstrate how artificial intelligence can support smart-city governance by helping authorities automatically prioritize civic issues and respond more efficiently to public grievances.
+
+---
+
+## Author
+
+Vadla Varshith Raj  
+B.Tech Computer Science and Engineering  
+CMR Technical Campus, Hyderabad
+
+---
+
+## Research Focus
+
+This project is part of research work on:
+
+**AI Trained Civic Grievance Prioritization System for Smart Urban Management**
+
+The system explores the use of machine learning and natural language processing for intelligent urban governance systems.
 ---
 
 ## Project Structure
