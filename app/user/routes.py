@@ -94,12 +94,17 @@ def submit_complaint():
         description = request.form.get("description")
 
         # AI priority prediction
-        priority = predict_priority(description)
+        prediction = predict_priority(description)
+        priority = prediction["priority"]
+        severity_score = prediction["severity_score"]
+        risk_type = prediction["risk_type"]
 
         # Similar complaint detection
         past = [c.description for c in Complaint.query.all()]
-        similarity_score = find_similar(description, past)
-        print("Similarity Score:", similarity_score)
+        similarity_score = 0
+        if len(past) > 0:
+            similarity_score = find_similar(description, past)
+            print("Similarity Score:", similarity_score)
 
         # Image detection
         image_risk = "None"
