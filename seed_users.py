@@ -5,16 +5,15 @@ from app.models.models import User
 app = create_app()
 
 with app.app_context():
+
     db.create_all()
 
-    # 🔐 hashed passwords
     admin_pass = bcrypt.generate_password_hash("admin123").decode("utf-8")
     user_pass = bcrypt.generate_password_hash("user123").decode("utf-8")
 
-    # check if admin already exists
-    if not User.query.filter_by(email="admin@test.com").first():
+    # create admin if not exists
+    if not User.query.filter_by(username="admin").first():
 
-        # 👤 admin
         admin = User(
             username="admin",
             email="admin@test.com",
@@ -22,7 +21,6 @@ with app.app_context():
             role="admin"
         )
 
-        # 👤 normal user
         user = User(
             username="user",
             email="user@test.com",
