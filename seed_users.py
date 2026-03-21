@@ -21,17 +21,10 @@ with app.app_context():
             role="admin"
         )
 
-        user = User(
-            username="user",
-            email="user@test.com",
-            password=user_pass,
-            role="user"
-        )
-
-        db.session.add_all([admin, user])
+        db.session.add_all([admin])
         db.session.commit()
 
-        print("✅ Admin & User created successfully")
+        print("✅ Admin created successfully")
 
     else:
-        print("⚠️ Users already exist")
+        print("⚠️ admin already exist")
