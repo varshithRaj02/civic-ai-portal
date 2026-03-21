@@ -5,26 +5,25 @@ from app.models.models import User
 app = create_app()
 
 with app.app_context():
-
     db.create_all()
 
-    admin_pass = bcrypt.generate_password_hash("admin123").decode("utf-8")
-    user_pass = bcrypt.generate_password_hash("user123").decode("utf-8")
-
-    # create admin if not exists
-    if not User.query.filter_by(username="admin").first():
-
-        admin = User(
-            username="admin",
-            email="admin@test.com",
-            password=admin_pass,
-            role="admin"
-        )
-
-        db.session.add_all([admin])
+    # delete old admin (important)
+    existing = User.query.filter_by(email="admin@test.com").first()
+    if existing:
+        db.session.delete(existing)
         db.session.commit()
 
-        print("✅ Admin created successfully")
+    # create new admin
+    admin_pass = bcrypt.generate_password_hash("admin123").decode("utf-8")
 
-    else:
-        print("⚠️ admin already exist")
+    admin = User(
+        username="admin",   # ✅ ADD THIS
+        email="admin@test.com",
+        password=admin_pass,
+        role="admin"
+    )
+
+    db.session.add(admin)
+    db.session.commit()
+
+    print("✅ Admin created successfully")
