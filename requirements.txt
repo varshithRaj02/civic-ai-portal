@@ -10,3 +10,4 @@ Pillow
 folium
 gunicorn
 itsdangerous
+psycopg2-binary
