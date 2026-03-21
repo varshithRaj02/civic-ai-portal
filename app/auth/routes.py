@@ -19,45 +19,42 @@ def load_user(user_id):
 @auth_bp.route("/", methods=["GET", "POST"])
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
 
+    if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
 
         user = User.query.filter_by(email=email).first()
 
-        # ✅ CORRECT CHECK
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.password, password):  # ✅ FIX
             login_user(user)
             return redirect(url_for("user.dashboard"))
-        else:
-            flash("Invalid email or password", "danger")
+
+        flash("Invalid credentials", "danger")
 
     return render_template("auth/login.html")
+
+
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
+
     if request.method == "POST":
-        # 🔥 TEMP FIX (remove after one deploy)
-        User.query.filter(User.role == "user").delete()
-        db.session.commit()
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
 
-        # ✅ HASH PASSWORD (MAIN FIX)
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
         user = User(
             username=username,
             email=email,
-            password=hashed_password,   # ✅ IMPORTANT
-            role="user"
+            password=hashed_password   # ✅ FIX
         )
 
         db.session.add(user)
         db.session.commit()
 
-        flash("Account created successfully! Please login.", "success")
+        flash("Account created successfully", "success")
         return redirect(url_for("auth.login"))
 
     return render_template("auth/register.html")
