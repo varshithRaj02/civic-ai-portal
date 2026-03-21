@@ -14,7 +14,7 @@ class Config:
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://")
 
-    SQLALCHEMY_DATABASE_URI = db_url
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = "app/static/uploads"
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
