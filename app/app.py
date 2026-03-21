@@ -1,12 +1,15 @@
 from flask import Flask
 from app.config import Config
 from app.extensions import login_manager, bcrypt, db
-
+import os
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        "DATABSE_URL","sqlite:///civic.db"
+        )
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Initialize extensions
     db.init_app(app)
