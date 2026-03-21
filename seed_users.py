@@ -14,7 +14,7 @@ with app.app_context():
         db.session.commit()
 
     # create new admin
-    admin_pass = bcrypt.generate_password_hash("admin123").decode("utf-8")
+    admin_pass = bcrypt.check_password_hash("admin123").decode("utf-8")
 
     admin = User(
         username="admin",   # ✅ ADD THIS
