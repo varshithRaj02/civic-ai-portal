@@ -42,13 +42,13 @@ def dashboard():
     category_counts = [c[1] for c in category_data]
 
     monthly_data = db.session.query(
-        func.strftime("%m", Complaint.created_at),
+        func.extract("month", Complaint.created_at),
         func.count(Complaint.id)
     ).filter_by(user_id=user_id).group_by(
-        func.strftime("%m", Complaint.created_at)
+        func.extract("month", Complaint.created_at)
     ).all()
 
-    months = [m[0] for m in monthly_data]
+    months = [int(m[0]) for m in monthly_data]
     month_counts = [m[1] for m in monthly_data]
 
     stats = {
